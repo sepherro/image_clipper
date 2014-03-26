@@ -65,13 +65,13 @@ def key_callback(event):
         image = Image.open(listoffiles[image_idx])
         image_tk = ImageTk.PhotoImage(image)
         canvas.create_image(image.size[0]//2, image.size[1]//2, image=image_tk)
-        print("displaying image", image_idx, " out of ", len(listoffiles))
+        print("displaying image", image_idx+1, " out of ", len(listoffiles)-1)
     if event.char == 'z' and (image_idx > 0):
         image_idx -= 1
         image = Image.open(listoffiles[image_idx])
         image_tk = ImageTk.PhotoImage(image)
         canvas.create_image(image.size[0]//2, image.size[1]//2, image=image_tk)
-        print("displaying image", image_idx, " out of ", len(listoffiles))
+        print("displaying image", image_idx+1, " out of ", len(listoffiles)-1)
     if event.char == 's' and snap_xsize < 30:
         snap_xsize += 5
         snap_ysize += 5
