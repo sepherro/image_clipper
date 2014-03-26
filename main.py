@@ -1,7 +1,7 @@
 import tkinter
 from PIL import Image, ImageTk
 import glob
-import os
+import winsound
 
 listoffiles=[]
 
@@ -9,6 +9,7 @@ snap_xsize = 15
 snap_ysize = 15
 
 image_idx=0
+cutout_idx=0
 
 for file in glob.glob("*.png"):
     print(file)
@@ -43,10 +44,14 @@ def lmb_callback(event):
 
 
 def rmb_callback(event):
+    global cutout_idx
     print("rmb pressed! x=", x, "y=", y)
     box = (x-snap_xsize, y-snap_ysize, x+snap_xsize, y+snap_ysize)
     region = image.crop(box)
-    region.save("samples/cutout.png", "PNG")
+    path = str(print("samples/cutout_%05d.png" % cutout_idx))
+    region.save("samples/cutout_%05d.png" % cutout_idx, "PNG")
+    winsound.Beep(1000, 50)
+    cutout_idx += 1
 
 
 def key_callback(event):
@@ -55,17 +60,18 @@ def key_callback(event):
     global image_idx
     global image
     global image_tk
-    if event.char == 'x' and (image_idx < len(listoffiles)):
-        image_idx +=1
+    if event.char == 'x' and (image_idx < len(listoffiles)-1):
+        image_idx += 1
         image = Image.open(listoffiles[image_idx])
         image_tk = ImageTk.PhotoImage(image)
         canvas.create_image(image.size[0]//2, image.size[1]//2, image=image_tk)
         print("displaying image", image_idx, " out of ", len(listoffiles))
     if event.char == 'z' and (image_idx > 0):
-        image_idx -=1
+        image_idx -= 1
         image = Image.open(listoffiles[image_idx])
         image_tk = ImageTk.PhotoImage(image)
         canvas.create_image(image.size[0]//2, image.size[1]//2, image=image_tk)
+        print("displaying image", image_idx, " out of ", len(listoffiles))
     if event.char == 's' and snap_xsize < 30:
         snap_xsize += 5
         snap_ysize += 5
