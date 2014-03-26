@@ -50,18 +50,18 @@ def rmb_callback(event):
 
 
 def key_callback(event):
-    print("Pressed", event.char)
     global snap_xsize           # need to find a more 'pythoney' way to do it
     global snap_ysize
     global image_idx
     global image
     global image_tk
-    if event.char == 'x':
+    if event.char == 'x' and (image_idx < len(listoffiles)):
         image_idx +=1
         image = Image.open(listoffiles[image_idx])
         image_tk = ImageTk.PhotoImage(image)
         canvas.create_image(image.size[0]//2, image.size[1]//2, image=image_tk)
-    if event.char == 'z':
+        print("displaying image", image_idx, " out of ", len(listoffiles))
+    if event.char == 'z' and (image_idx > 0):
         image_idx -=1
         image = Image.open(listoffiles[image_idx])
         image_tk = ImageTk.PhotoImage(image)
@@ -69,10 +69,11 @@ def key_callback(event):
     if event.char == 's' and snap_xsize < 30:
         snap_xsize += 5
         snap_ysize += 5
+        print("window size is now ", snap_xsize, " by ", snap_ysize, " pixels")
     if event.char == 'a' and snap_xsize > 5:
         snap_xsize -= 5
         snap_ysize -= 5
-    print ("window size is now ", snap_xsize, " by ", snap_ysize, " pixels")
+        print("window size is now ", snap_xsize, " by ", snap_ysize, " pixels")
 
 
 #the line below is necessary for the keypress callback to work
