@@ -1,9 +1,19 @@
 import tkinter
 from PIL import Image, ImageTk
-from sys import argv
+import glob
+import os
+
+listoffiles=[]
 
 snap_xsize = 15
 snap_ysize = 15
+
+image_idx=0
+
+for file in glob.glob("*.png"):
+    print(file)
+    listoffiles.append(file)
+
 
 x = 0
 y = 0
@@ -11,7 +21,7 @@ y = 0
 #Tkinter stuff window creation
 window = tkinter.Tk()
 #open image
-image = Image.open("cat.png")
+image = Image.open(listoffiles[image_idx])
 #create canvas of given size
 canvas = tkinter.Canvas(window, width=image.size[0], height=image.size[1])
 canvas.pack()
@@ -43,10 +53,23 @@ def key_callback(event):
     print("Pressed", event.char)
     global snap_xsize           # need to find a more 'pythoney' way to do it
     global snap_ysize
-    if event.char == 'a' and snap_xsize < 30:
+    global image_idx
+    global image
+    global image_tk
+    if event.char == 'x':
+        image_idx +=1
+        image = Image.open(listoffiles[image_idx])
+        image_tk = ImageTk.PhotoImage(image)
+        canvas.create_image(image.size[0]//2, image.size[1]//2, image=image_tk)
+    if event.char == 'z':
+        image_idx -=1
+        image = Image.open(listoffiles[image_idx])
+        image_tk = ImageTk.PhotoImage(image)
+        canvas.create_image(image.size[0]//2, image.size[1]//2, image=image_tk)
+    if event.char == 's' and snap_xsize < 30:
         snap_xsize += 5
         snap_ysize += 5
-    if event.char == 's' and snap_xsize > 5:
+    if event.char == 'a' and snap_xsize > 5:
         snap_xsize -= 5
         snap_ysize -= 5
     print ("window size is now ", snap_xsize, " by ", snap_ysize, " pixels")
@@ -55,10 +78,14 @@ def key_callback(event):
 #the line below is necessary for the keypress callback to work
 canvas.focus_set()
 
-
-
 canvas.bind("<Button-1>", lmb_callback)
 canvas.bind("<Button-3>", rmb_callback)
 canvas.bind("<Key>", key_callback)
+
+
+
+
+print(listoffiles[1])
+
 
 tkinter.mainloop()
